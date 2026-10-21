@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TICK · buys itself every 5 seconds</title>
+<meta name="description" content="$TICK on Solana: creator fees are claimed every minute and spent in 12 equal buys, one every 5 seconds. Every token bought is burned. Every tick on this page is a real Solana slot.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="TICK ($TICK)">
+<meta property="og:description" content="The coin that buys itself every 5 seconds. Every token bought is burned.">
+<meta property="og:image" content="og.jpg">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="og.jpg">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Martian+Mono:wght@300;400;500&display=swap">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mk" viewBox="100 440 1600 1090">
+    <rect x="113" y="815" width="181" height="41" fill="currentColor" opacity=".35"/>
+    <rect x="181" y="958" width="222" height="41" fill="currentColor"/>
+    <rect x="264" y="1102" width="211" height="41" fill="currentColor" opacity=".6"/>
+    <polygon points="389,1018 546,860 867,1181 1512,465 1677,614 875,1504" fill="currentColor"/>
+  </symbol>
+  <symbol id="ck" viewBox="380 455 1305 1060">
+    <polygon points="389,1018 546,860 867,1181 1512,465 1677,614 875,1504" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="TICK home">
+      <span class="brand-tile"><svg viewBox="100 440 1600 1090"><use href="#mk"/></svg></span>
+      <span class="brand-name" data-cfg="NAME">TICK</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#rules">Rules</a>
+      <a href="#minute">One minute</a>
+      <a href="#speed">Alpenglow</a>
+      <a href="#tape" data-need="CA" hidden>Tape</a>
+    </nav>
+    <div class="nav-act">
+      <button class="snd" id="sndBtn" type="button" aria-pressed="false" aria-label="Sound off">
+        <svg class="snd-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="snd-on" d="M16 9.5a3.5 3.5 0 0 1 0 5M18.5 7a7 7 0 0 1 0 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path class="snd-off" d="M16.5 9.5l5 5M21.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="snd-t">Sound off</span>
+      </button>
+      <a class="btn btn-w btn-sm" id="navBuy" href="#" target="_blank" rel="noopener" hidden><span>Buy $<span data-cfg="TICKER">TICK</span></span></a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="top">
+  <div class="wrap hero-top">
+    <div class="hero-copy">
+      <p class="live-pill" id="feedPill"><span class="lp-dot"></span><span id="feedStatus">Connecting to Solana</span></p>
+      <h1 class="h1">The coin that buys itself every&nbsp;5&nbsp;seconds.</h1>
+    </div>
+    <div class="hero-side">
+      <p class="lede">Creator fees from $<span data-cfg="TICKER">TICK</span> are claimed every minute and spent in 12&nbsp;equal buys, one every 5&nbsp;seconds, all day. Every token those buys get is burned.</p>
+      <div class="ctas">
+        <button class="btn btn-w" id="gameBtn" type="button"><span class="kbd" aria-hidden="true">␣</span> Beat the block</button>
+        <a class="btn" href="#rules">The rules</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="stream" id="streamBox">
+    <canvas id="streamCv" aria-label="Live Solana slots, one checkmark per slot" role="img"></canvas>
+    <div class="stream-cap wrap">
+      <span id="streamCap">Each ✓ is one Solana slot, as it happens.</span>
+      <span class="stream-src" id="streamSrc"></span>
+    </div>
+    <div class="game-ov" id="gameOv" hidden>
+      <div class="go-in">
+        <p class="go-k" id="goK">Beat the block</p>
+        <p class="go-msg" id="goMsg">Wait for the flash.</p>
+        <p class="go-sub" id="goSub">Tap here or press space the moment it flashes.</p>
+        <div class="go-act" id="goAct" hidden>
+          <button class="btn btn-w btn-sm" id="goAgain" type="button">Again</button>
+          <button class="btn btn-sm" id="goClose" type="button">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap readouts">
+    <div class="ro ro-slot">
+      <span class="ro-k">Slot <span class="ro-hint">newest, processed</span></span>
+      <span class="ro-v ro-big" id="roSlot"><span class="sk">000,000,000</span></span>
+    </div>
+    <div class="ro">
+      <span class="ro-k">Slot time <span class="ro-hint" id="roMsHint">measured</span></span>
+      <span class="ro-v" id="roSlotMs"><span class="sk">000</span></span><span class="ro-u" id="roSlotMsU">ms</span>
+    </div>
+    <div class="ro">
+      <span class="ro-k">Finality <span class="ro-hint" id="roFinHint">(slot − root) × slot time</span></span>
+      <span class="ro-v ro-acc" id="roFin"><span class="sk">000</span></span><span class="ro-u" id="roFinU">ms</span>
+    </div>
+    <div class="ro ro-strip">
+      <span class="ro-k">Last 60 s <span class="ro-hint" id="stripHint">slot intervals</span></span>
+      <canvas id="stripCv" aria-label="Chart of real slot intervals over the last 60 seconds" role="img"></canvas>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="rules">
+  <div class="wrap">
+    <div class="sec-head sec-head-row">
+      <div>
+        <p class="sec-k"><span>01</span><span>The rules</span></p>
+        <h2 class="h2">1 minute of fees<br><span class="dim">→</span> 12 buys<br><span class="dim">→</span> burned.</h2>
+      </div>
+      <p class="sec-lede">These are the published rules of $<span data-cfg="TICKER">TICK</span>, in plain words. Nothing else happens to the fees.</p>
+    </div>
+    <ol class="spec">
+      <li class="sp"><span class="sp-i">01</span><span class="sp-v">60<small>s</small></span><div class="sp-t"><h3>Claim</h3><p>The creator fees from $<span data-cfg="TICKER">TICK</span> are claimed every minute.</p></div></li>
+      <li class="sp"><span class="sp-i">02</span><span class="sp-v">÷12</span><div class="sp-t"><h3>Split</h3><p>That minute of fees is split into 12 equal buys.</p></div></li>
+      <li class="sp"><span class="sp-i">03</span><span class="sp-v">5<small>s</small></span><div class="sp-t"><h3>Buy</h3><p>One buy of $<span data-cfg="TICKER">TICK</span> every 5 seconds, all day.</p></div></li>
+      <li class="sp"><span class="sp-i">04</span><span class="sp-v">100<small>%</small></span><div class="sp-t"><h3>Burn</h3><p>Every token those buys get is burned.</p></div></li>
+    </ol>
+    <figure class="gap-fig" aria-label="Two buys are 5 seconds apart; about 25 Solana blocks of 0.2 seconds fit between them">
+      <div class="gf-row">
+        <span class="gf-buy"><svg viewBox="100 440 1600 1090"><use href="#mk"/></svg><em>buy</em></span>
+        <span class="gf-slots" id="gfSlots"></span>
+        <span class="gf-buy"><svg viewBox="100 440 1600 1090"><use href="#mk"/></svg><em>next buy</em></span>
+      </div>
+      <figcaption class="gf-cap"><span><b>5 s</b> between buys</span><span><b>≈ 0.2 s</b> per Solana block · <b>≈ 25</b> blocks in the gap</span></figcaption>
+    </figure>
+    <p class="rl-sub">Buys are 5&nbsp;s apart while Solana blocks are about 0.2&nbsp;s, so every buy lands on its own and you can watch each one arrive. A tick is one confirmed transaction&nbsp;✓, and the tick of a clock.</p>
+  </div>
+</section>
+
+<section class="sec sec-minute" id="minute">
+  <div class="wrap">
+    <div class="sec-head sec-head-row">
+      <div>
+        <p class="sec-k"><span>02</span><span>One minute of $<span data-cfg="TICKER">TICK</span></span></p>
+        <h2 class="h2">300 blocks.<br><span class="dim">12 buys.</span></h2>
+      </div>
+      <p class="sec-lede">Each row is a 5-second window of this real minute (UTC clock). The squares are the real Solana slots arriving on this page. Under the rules, each window holds exactly one $<span data-cfg="TICKER">TICK</span> buy.</p>
+    </div>
+    <div class="minute-card">
+      <div class="mc-top">
+        <span class="mc-stat"><b id="mnNow">—</b><em>blocks this minute</em></span>
+        <span class="mc-stat"><b id="mnWin">—</b><em id="mnWinK">this 5 s window</em></span>
+        <span class="mc-stat"><b id="mnAvg">—</b><em>avg per full window</em></span>
+        <span class="mc-stat" data-need="BOT" hidden><b id="mnBuys">—</b><em>bot buys this minute</em></span>
+        <span class="mc-clock" id="mnClock">--:--:--</span>
+      </div>
+      <canvas id="minuteCv" aria-label="Grid of the current minute: twelve 5-second windows filled with real Solana slots" role="img"></canvas>
+      <p class="mc-key"><span class="key-sq"></span> real slot <span class="key-ck"><svg viewBox="360 440 1340 1090" width="14" height="12"><polygon points="389,1018 546,860 867,1181 1512,465 1677,614 875,1504" fill="none" stroke="currentColor" stroke-width="70"/></svg></span> one buy per window, by the rules<span data-need="BOT" hidden> · <b class="acc">filled</b> = a real bot buy landed</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="tape" data-need="CA" hidden>
+  <div class="wrap">
+    <div class="sec-head sec-head-row">
+      <div>
+        <p class="sec-k"><span>03</span><span id="tapeTitle">Buy tape</span></p>
+        <h2 class="h2" id="tapeH">Every tick,<br><span class="dim">as it lands.</span></h2>
+      </div>
+      <p class="sec-lede" id="tapeLede"></p>
+    </div>
+    <div class="tape-card">
+      <div class="tape-head"><span id="tapeStatus" class="tape-st">Connecting to PumpPortal</span><span class="tape-cols"><span>SOL</span><span>$<span data-cfg="TICKER">TICK</span></span><span>tx</span></span></div>
+      <ol class="tape-rows" id="tapeRows"></ol>
+      <p class="tape-empty" id="tapeEmpty">No trades yet on this page. New ones appear here the moment PumpPortal sees them.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="burn" data-need="CA" hidden>
+  <div class="wrap">
+    <div class="burn-card">
+      <p class="sec-k"><span>04</span><span>Burned so far</span></p>
+      <p class="burn-n"><span id="burnN"><span class="sk">000,000,000</span></span> <small>$<span data-cfg="TICKER">TICK</span></small></p>
+      <div class="burn-bar" aria-hidden="true"><i id="burnBar"></i></div>
+      <p class="burn-sub"><span id="burnPct">—</span> of the 1,000,000,000 minted · supply read live with getTokenSupply</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-speed" id="speed">
+  <div class="wrap">
+    <div class="sec-head sec-head-row">
+      <div>
+        <p class="sec-k"><span>05</span><span>Alpenglow</span></p>
+        <h2 class="h2">12.8 seconds<br><span class="dim">became a blink.</span></h2>
+      </div>
+      <p class="sec-lede">On Oct 21 2026 Solana's Alpenglow upgrade went live on mainnet. Votor replaces TowerBFT, the finality target drops from about 12.8&nbsp;s to about 150&nbsp;ms, and blocks were already cut from 400&nbsp;ms to 200&nbsp;ms this month.</p>
+    </div>
+    <div class="race">
+      <div class="race-row">
+        <div class="race-lbl"><b>TowerBFT</b><span>published ≈ 12,800 ms to finality</span></div>
+        <div class="race-track"><i class="race-fill" id="raceOld"></i><span class="race-t" id="raceOldT">0.0 s</span></div>
+      </div>
+      <div class="race-row race-new">
+        <div class="race-lbl"><b>Now</b><span>finalized slots seen live on this page</span></div>
+        <div class="race-track race-ticks" id="raceTicks"></div>
+      </div>
+      <p class="race-out" id="raceOut">While one TowerBFT finality runs, count the slots Solana finalizes on this page’s live feed.</p>
+    </div>
+    <div class="cmp">
+      <div class="cmp-c"><span class="cmp-k">Finality</span><span class="cmp-was">≈ 12,800 ms</span><span class="cmp-arrow">→</span><span class="cmp-now"><b id="cmpFin">—</b><em id="cmpFinE">measured now</em></span></div>
+      <div class="cmp-c"><span class="cmp-k">Block time</span><span class="cmp-was">400 ms</span><span class="cmp-arrow">→</span><span class="cmp-now"><b id="cmpSlot">—</b><em id="cmpSlotE">measured now</em></span></div>
+      <div class="cmp-c"><span class="cmp-k">Speed-up</span><span class="cmp-was">1×</span><span class="cmp-arrow">→</span><span class="cmp-now"><b id="cmpX">—</b><em id="cmpXE">12.8 s ÷ measured finality</em></span></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <span class="brand-tile brand-tile-lg"><svg viewBox="100 440 1600 1090"><use href="#mk"/></svg></span>
+        <p><b>$<span data-cfg="TICKER">TICK</span></b> buys itself every 5 seconds.</p>
+      </div>
+      <div class="foot-links">
+        <button class="ca" id="caBtn" type="button" data-need="CA" hidden><span class="ca-k">CA</span><span class="ca-v" id="caV"></span><span class="ca-c" id="caC">copy</span></button>
+        <a class="btn btn-w" id="ftBuy" href="#" target="_blank" rel="noopener" hidden>Buy on pump.fun</a>
+        <a class="btn" id="ftChart" href="#" target="_blank" rel="noopener" hidden>Chart</a>
+        <a class="btn" id="ftX" href="#" target="_blank" rel="noopener" hidden>X</a>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>Slots: Solana RPC by publicnode · trades: PumpPortal · all numbers read live in your browser.</span>
+      <span>$<span data-cfg="TICKER">TICK</span> is a memecoin with no promise of value.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="app.js" defer></script>
+</body>
+</html>
